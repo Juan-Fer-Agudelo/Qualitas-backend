@@ -10,5 +10,6 @@ Router.delete('/Users/:id', deleteUser)
 
 Router.post('/Register', register);
 Router.post('/Login', login);
+Router.post('/Login', login); // Por cuestiones dupliqué esta linea
 
 export default Router;

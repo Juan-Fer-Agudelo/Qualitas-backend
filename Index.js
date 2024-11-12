@@ -1,23 +1,26 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import sequelize from './Config/DB.js';
-import UserRoutes from './Routes/UserRoutes.js'
+import cors from 'cors';
+import UserRoutes from './Routes/UserRoutes.js';
+
+dotenv.config();
 
 //Initialization
-dotenv.config();
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
+app.use(cors());
 
 //Settings
 app.use(express.json());
-app.use('/api/Users', UserRoutes);
+app.use('/api', UserRoutes);
 
 // Run Server y Sincronizar la base de datos
-sequelize.sync({}).then(() => {
+sequelize.sync().then(() => {
     console.log('Database synced!');
     
     app.listen(port, () => {
-      console.log(`Server running on port ${port}`);
+      console.log(`Server running on port http://localhost:3001`);
     });
   }).catch(error => {
     console.log('Error syncing database:', error);

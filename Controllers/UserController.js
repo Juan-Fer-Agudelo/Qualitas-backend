@@ -12,6 +12,16 @@ export const getUsers = async (req, res) => {
   }
 };
 
+export const getUsersById = async (req, res)=>{
+  try{
+      const user = await User.findByPk(req.params.id);
+      if(!user) return res.status(404).json({error: 'Usuario No Encontrado' })
+        res.status(200).json(user)
+  }catch(error){
+      res.status(400).json({error: error.message})
+  }
+}
+
 // Crear un nuevo usuario
 export const createUser = async (req, res) => {
   const { name, email, password } = req.body;
@@ -19,7 +29,7 @@ export const createUser = async (req, res) => {
     const user = await User.create({ name, email, password });
     res.status(201).json(user);
   } catch (error) {
-    res.status(500).json({ error: 'Error creating user' });
+    res.status(400).json({ error: 'Error creating user' });
   }
 };
 
@@ -64,7 +74,7 @@ const generateToken = (user) => {
 }
 
 export const register = async (req, res) =>{
-  const {email, password} = req.body;
+  const {name, email, password} = req.body;
   try {
     // Verificar si el usuario ya existe
     const existingUser = await User.findOne({where: {email}});
@@ -73,7 +83,7 @@ export const register = async (req, res) =>{
     }
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = await User.create({email, password:hashedPassword});
+    const newUser = await User.create({name, email, password:hashedPassword});
     const token = generateToken(newUser);
 
     res.status(200).json({token})
